@@ -84,8 +84,8 @@ export default class LoginPage extends React.Component {
 		return(
 			<Button
 				onPress={() => this.tryLogin()}
-			  	title="Acessar"
-			  	color="#252a34"
+			  title="Acessar"
+			  color="#252a34"
 			/>
 		);
 	}
@@ -93,9 +93,9 @@ export default class LoginPage extends React.Component {
 	renderButtonRegister() {
 		return(
 			<Button
-				onPress={() => this.tryRegister()}
-			  	title="Registrar-se"
-			  	color="#ff2e63"
+				//onPress={() => navigate('Register')}
+			  title="Registrar-se"
+			  color="#ff2e63"
 			/>
 		);
 	}
@@ -119,8 +119,8 @@ export default class LoginPage extends React.Component {
 
 				<Image
 					style={styles.image}
-		        	source={require('../../assets/login.png')}
-		        />
+		      source={require('../../assets/login.png')}
+		    />
 
 				<FormRow first>
 					<Text>Login:</Text>

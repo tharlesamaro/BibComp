@@ -2,12 +2,20 @@ import { createStackNavigator } from 'react-navigation';
 
 import LoginPage from './src/pages/LoginPage';
 
+import RegisterPage from './src/pages/RegisterPage'
+
 export default createStackNavigator(
 	{
 		'Login': {
 			screen: LoginPage,
 			navigationOptions: {
 		    	title: "BibComp - Login"
+		  	}
+		},
+		'Register': {
+			screen: RegisterPage,
+			navigationOptions: {
+		    	title: "BibComp - Cadastro"
 		  	}
 		}
 	},
