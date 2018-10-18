@@ -19,6 +19,10 @@ export default class LoginPage extends React.Component {
 		});
 	}
 
+	tryLogin() {
+		console.log(this.state);
+	}
+
 	render() {
 		return (
 			<View>
@@ -46,8 +50,7 @@ export default class LoginPage extends React.Component {
 					/>
 				</FormRow>
 				<Button
-					style={styles.button}
-					//onPress={}
+					onPress={() => this.tryLogin()}
 				  	title="Acessar"
 				  	color="#ff2e63"
 				/>
