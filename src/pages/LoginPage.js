@@ -19,9 +19,10 @@ export default class LoginPage extends React.Component {
 		super(props);
 
 		this.state = {
-	  		'mail': '',
-	  		'password': '',
+	  		mail: '',
+	  		password: '',
 	  		isLoading: false,
+	  		message: '',
 	  	};
 	}
 
@@ -45,7 +46,7 @@ export default class LoginPage extends React.Component {
 	}
 
 	tryLogin() {
-		this.setState({ isLoading: true });
+		this.setState({ isLoading: true, message: '' });
 
 		const { mail, password } = this.state
 
@@ -56,9 +57,20 @@ export default class LoginPage extends React.Component {
 				console.log('Usuário autenticado!', user);
 			})
 			.catch(error => {
-				console.log('Erro ao logar', error);
+				this.setState({ message: this.getMessageErrorCode(error.code) })
 			})
 			.then(() => this.setState({ isLoading: false }));
+	}
+
+	getMessageErrorCode(errorCode) {
+		switch(errorCode) {
+			case 'auth/wrong-password':
+				return 'Senha incorreta';
+			case 'auth/user-not-found':
+				return 'Usuário não encontrado';
+			default:
+				return 'Erro desconhecido';
+		}
 	}
 
 	tryRegister() {
@@ -85,6 +97,19 @@ export default class LoginPage extends React.Component {
 			  	title="Registrar-se"
 			  	color="#ff2e63"
 			/>
+		);
+	}
+
+	renderMessage() {
+		const { message } = this.state;
+
+		if (!message)
+			return null;
+
+		return(
+			<View>
+				<Text style={styles.erro}>{ message }</Text>
+			</View>
 		);
 	}
 
@@ -118,6 +143,8 @@ export default class LoginPage extends React.Component {
 					/>
 				</FormRow>
 
+				{ this.renderMessage() }
+
 				{ this.renderButtonLogin() }
 
 				<FormRow first></FormRow>
@@ -145,4 +172,10 @@ const styles = StyleSheet.create({
 		paddingLeft: 5,
 		paddingBottom: 5
 	},
+	erro: {
+		color: 'red',
+		alignSelf: 'center',
+		paddingBottom: 5,
+		paddingTop: 5,
+	}
 });
