@@ -1,17 +1,28 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Image, Button } from 'react-native';
+
+import {
+	View,
+	Text,
+	TextInput,
+	StyleSheet,
+	Image,
+	Button,
+	ActivityIndicator
+} from 'react-native';
+
 import firebase from 'firebase';
 
 import FormRow from '../components/FormRow';
 
 export default class LoginPage extends React.Component {
 	constructor(props) {
-	  super(props);
+		super(props);
 
-	  this.state = {
-	  	'mail': '',
-	  	'password': ''
-	  };
+		this.state = {
+	  		'mail': '',
+	  		'password': '',
+	  		isLoading: false,
+	  	};
 	}
 
 	componentDidMount() {
@@ -25,17 +36,6 @@ export default class LoginPage extends React.Component {
 		};
 
 		firebase.initializeApp(config);
-
-		//testando autenticação
-		firebase
-			.auth()
-			.signInWithEmailAndPassword('tharlesamaro@gmail.com', '12345678')
-			.then(user => {
-				console.log('Usuário autenticado!', user);
-			})
-			.catch(error => {
-				console.log('Erro ao logar', error);
-			})
 	}
 
 	onChangeInput(field, value) {
@@ -45,11 +45,47 @@ export default class LoginPage extends React.Component {
 	}
 
 	tryLogin() {
-		console.log(this.state);
+		this.setState({ isLoading: true });
+
+		const { mail, password } = this.state
+
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(mail, password)
+			.then(user => {
+				console.log('Usuário autenticado!', user);
+			})
+			.catch(error => {
+				console.log('Erro ao logar', error);
+			})
+			.then(() => this.setState({ isLoading: false }));
 	}
 
 	tryRegister() {
 
+	}
+
+	renderButtonLogin() {
+		if (this.state.isLoading)
+			return <ActivityIndicator />;
+
+		return(
+			<Button
+				onPress={() => this.tryLogin()}
+			  	title="Acessar"
+			  	color="#252a34"
+			/>
+		);
+	}
+
+	renderButtonRegister() {
+		return(
+			<Button
+				onPress={() => this.tryRegister()}
+			  	title="Registrar-se"
+			  	color="#ff2e63"
+			/>
+		);
 	}
 
 	render() {
@@ -82,19 +118,12 @@ export default class LoginPage extends React.Component {
 					/>
 				</FormRow>
 
-				<Button
-					onPress={() => this.tryLogin()}
-				  	title="Acessar"
-				  	color="#252a34"
-				/>
+				{ this.renderButtonLogin() }
 
 				<FormRow first></FormRow>
 
-				<Button
-					onPress={() => this.tryRegister()}
-				  	title="Registrar-se"
-				  	color="#ff2e63"
-				/>
+				{ this.renderButtonRegister() }
+
 			</View>
 		)
 	}
