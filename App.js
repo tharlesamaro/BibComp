@@ -16,7 +16,7 @@ export default createStackNavigator(
 	  		title: "BibComp",
 	  		headerTintColor: 'white',
 	  		headerStyle: {
-	    		backgroundColor: '#08d9d6',
+	    		backgroundColor: '#252a34',
 	    		borderBottomWidth: 1,
 	    		borderBottomColor: '#eeeeee',
 	  		},

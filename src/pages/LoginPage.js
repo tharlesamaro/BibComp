@@ -23,14 +23,20 @@ export default class LoginPage extends React.Component {
 		console.log(this.state);
 	}
 
+	tryRegister() {
+
+	}
+
 	render() {
 		return (
-			<View>
+			<View style={styles.container}>
+
 				<Image
 					style={styles.image}
 		        	source={require('../../assets/login.png')}
 		        />
-				<FormRow>
+
+				<FormRow first>
 					<Text>Login:</Text>
 					<TextInput
 						style={styles.input}
@@ -39,7 +45,8 @@ export default class LoginPage extends React.Component {
 						onChangeText={value => this.onChangeInput('mail', value)}
 					/>
 				</FormRow>
-				<FormRow>
+
+				<FormRow last>
 					<Text>Senha:</Text>
 					<TextInput
 						style={styles.input}
@@ -49,9 +56,18 @@ export default class LoginPage extends React.Component {
 						onChangeText={value => this.onChangeInput('password', value)}
 					/>
 				</FormRow>
+
 				<Button
 					onPress={() => this.tryLogin()}
 				  	title="Acessar"
+				  	color="#252a34"
+				/>
+
+				<FormRow first></FormRow>
+
+				<Button
+					onPress={() => this.tryRegister()}
+				  	title="Registrar-se"
 				  	color="#ff2e63"
 				/>
 			</View>
@@ -60,6 +76,11 @@ export default class LoginPage extends React.Component {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		paddingLeft: 10,
+		paddingRight: 10,
+		backgroundColor: '#eaeaea'
+	},
 	image: {
 		width: 100,
 		height: 100,
@@ -69,5 +90,5 @@ const styles = StyleSheet.create({
 	input: {
 		paddingLeft: 5,
 		paddingBottom: 5
-	}
+	},
 });
