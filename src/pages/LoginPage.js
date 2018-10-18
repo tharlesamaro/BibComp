@@ -15,7 +15,7 @@ export default class LoginPage extends React.Component {
 	}
 
 	componentDidMount() {
-		var config = {
+		const config = {
 		    apiKey: "AIzaSyASJ63kwxcYYnU5ottEcMjG6AkqPfGYvgg",
 		    authDomain: "bibcomp-5a744.firebaseapp.com",
 		    databaseURL: "https://bibcomp-5a744.firebaseio.com",
@@ -25,6 +25,17 @@ export default class LoginPage extends React.Component {
 		};
 
 		firebase.initializeApp(config);
+
+		//testando autenticação
+		firebase
+			.auth()
+			.signInWithEmailAndPassword('tharlesamaro@gmail.com', '12345678')
+			.then(user => {
+				console.log('Usuário autenticado!', user);
+			})
+			.catch(error => {
+				console.log('Erro ao logar', error);
+			})
 	}
 
 	onChangeInput(field, value) {
