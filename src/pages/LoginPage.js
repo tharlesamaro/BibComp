@@ -12,11 +12,12 @@ import {
 
 import firebase from 'firebase';
 
-import FormRow from '../components/FormRow';
-
 import FirebaseConfig from '../components/FirebaseConfig';
 
+import FormRow from '../components/FormRow';
+
 export default class LoginPage extends React.Component {
+
 	constructor(props) {
 		super(props);
 
@@ -29,7 +30,6 @@ export default class LoginPage extends React.Component {
 	}
 
 	componentDidMount() {
-
 		firebase.initializeApp(FirebaseConfig);
 	}
 
@@ -68,7 +68,7 @@ export default class LoginPage extends React.Component {
 	}
 
 	tryRegister() {
-
+		this.props.navigation.navigate('Register');
 	}
 
 	renderButtonLogin() {
@@ -87,7 +87,7 @@ export default class LoginPage extends React.Component {
 	renderButtonRegister() {
 		return(
 			<Button
-				//onPress={() => navigate('Register')}
+				onPress={() => this.tryRegister()}
 			  title="Registrar-se"
 			  color="#ff2e63"
 			/>
