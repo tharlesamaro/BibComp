@@ -117,7 +117,7 @@ export default class LoginPage extends React.Component {
 		    />
 
 				<FormRow first>
-					<Text>Login:</Text>
+					<Text>E-mail:</Text>
 					<TextInput
 						style={styles.input}
 						placeholder="exemplo@mail.com"
