@@ -14,6 +14,8 @@ import firebase from 'firebase';
 
 import FormRow from '../components/FormRow';
 
+import FirebaseConfig from '../components/FirebaseConfig';
+
 export default class LoginPage extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,16 +29,8 @@ export default class LoginPage extends React.Component {
 	}
 
 	componentDidMount() {
-		const config = {
-		    apiKey: "AIzaSyASJ63kwxcYYnU5ottEcMjG6AkqPfGYvgg",
-		    authDomain: "bibcomp-5a744.firebaseapp.com",
-		    databaseURL: "https://bibcomp-5a744.firebaseio.com",
-		    projectId: "bibcomp-5a744",
-		    storageBucket: "bibcomp-5a744.appspot.com",
-		    messagingSenderId: "202155716246"
-		};
 
-		firebase.initializeApp(config);
+		firebase.initializeApp(FirebaseConfig);
 	}
 
 	onChangeInput(field, value) {

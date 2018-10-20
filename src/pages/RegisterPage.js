@@ -12,6 +12,8 @@ import {
 
 import firebase from 'firebase';
 
+import FirebaseConfig from '../components/FirebaseConfig';
+
 import FormRow from '../components/FormRow';
 
 export default class RegisterPage extends React.Component {
