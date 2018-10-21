@@ -12,9 +12,12 @@ import {
 
 import firebase from 'firebase';
 
+import FirebaseConfig from '../components/FirebaseConfig';
+
 import FormRow from '../components/FormRow';
 
 export default class LoginPage extends React.Component {
+
 	constructor(props) {
 		super(props);
 
@@ -27,16 +30,7 @@ export default class LoginPage extends React.Component {
 	}
 
 	componentDidMount() {
-		const config = {
-		    apiKey: "AIzaSyASJ63kwxcYYnU5ottEcMjG6AkqPfGYvgg",
-		    authDomain: "bibcomp-5a744.firebaseapp.com",
-		    databaseURL: "https://bibcomp-5a744.firebaseio.com",
-		    projectId: "bibcomp-5a744",
-		    storageBucket: "bibcomp-5a744.appspot.com",
-		    messagingSenderId: "202155716246"
-		};
-
-		firebase.initializeApp(config);
+		firebase.initializeApp(FirebaseConfig);
 	}
 
 	onChangeInput(field, value) {
@@ -74,7 +68,7 @@ export default class LoginPage extends React.Component {
 	}
 
 	tryRegister() {
-
+		this.props.navigation.navigate('Register');
 	}
 
 	renderButtonLogin() {
@@ -93,7 +87,7 @@ export default class LoginPage extends React.Component {
 	renderButtonRegister() {
 		return(
 			<Button
-				//onPress={() => navigate('Register')}
+				onPress={() => this.tryRegister()}
 			  title="Registrar-se"
 			  color="#ff2e63"
 			/>
@@ -123,7 +117,7 @@ export default class LoginPage extends React.Component {
 		    />
 
 				<FormRow first>
-					<Text>Login:</Text>
+					<Text>E-mail:</Text>
 					<TextInput
 						style={styles.input}
 						placeholder="exemplo@mail.com"
