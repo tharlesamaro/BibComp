@@ -11,7 +11,7 @@ import {
 
 import FormRow from '../components/FormRow';
 
-import ApiUrl from '../components/Api';
+import ApiUrl from '../service/Api';
 
 export default class RegisterPage extends React.Component {
 
@@ -57,13 +57,19 @@ export default class RegisterPage extends React.Component {
 			})
 			.then(response => response.json())
 				.then(responseJson => {
-					console.log('1: ', responseJson);
+					console.log('(debug) 01 - responseJson: ', responseJson);
+
+					if (responseJson.status === 'sucesso') {
+						console.log(responseJson.mensagem);
+					}
+
+					// mostrar mensagem de erro
 				})
 				.catch(error => {
-					console.log('Erro: ', error);
+					console.log('Erro no react native: ', error);
 					this.setState({ Mensagem: this.getMessageErrorCode(error.code) })
 				})
-			.then(() => this.setState({ IsLoading: false }));
+				.then(() => this.setState({ IsLoading: false }));
 		}
 		else {
 			this.setState({
