@@ -9,6 +9,12 @@ O aplicativo deve ter as seguintes funcionalidades representadas pelas telas a s
 Funcionalidades adicionais valem bônus, porém só serão consideradas se forem
 implementadas as funcionalidades abaixo.
 
+## Backend
+
+[Clique aqui para ver o backend do projeto](https://github.com/tharlesamaro/BibComp-Backend)
+
+## Telas
+
   - Login / logout
   
   ![Tela de login](https://uploaddeimagens.com.br/images/001/674/910/full/1.png?1539811710)
