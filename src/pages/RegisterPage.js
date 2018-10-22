@@ -6,7 +6,8 @@ import {
 	TextInput,
 	StyleSheet,
 	Button,
-	ActivityIndicator
+	ActivityIndicator,
+	Alert
 } from 'react-native';
 
 import FormRow from '../components/FormRow';
@@ -28,16 +29,13 @@ export default class RegisterPage extends React.Component {
 	  	};
 	}
 
-	componentDidMount() {
-	}
-
-	onChangeInput(field, value) {
+	onChangeInput(campo, valor) {
 		this.setState({
-			[field]: value
+			[campo]: valor
 		});
 	}
 
-	tryRegister() {
+	registrar() {
 		this.setState({ IsLoading: true, Mensagem: '' });
 
 		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
@@ -57,17 +55,16 @@ export default class RegisterPage extends React.Component {
 			})
 			.then(response => response.json())
 				.then(responseJson => {
-					console.log('(debug) 01 - responseJson: ', responseJson);
-
 					if (responseJson.status === 'sucesso') {
-						console.log(responseJson.mensagem);
+						Alert.alert(responseJson.mensagem);
+						this.props.navigation.navigate('Login')
 					}
-
-					// mostrar mensagem de erro
+					if (responseJson.status === 'atencao' || responseJson.status === 'erro')
+						this.setState({ Mensagem: responseJson.mensagem })
 				})
 				.catch(error => {
 					console.log('Erro no react native: ', error);
-					this.setState({ Mensagem: this.getMessageErrorCode(error.code) })
+					this.setState({ Mensagem: error })
 				})
 				.then(() => this.setState({ IsLoading: false }));
 		}
@@ -79,21 +76,20 @@ export default class RegisterPage extends React.Component {
 		}
 	}
 
-	getMessageErrorCode(errorCode) {
+	mostrarBotaoRegistrar() {
+		if (this.state.IsLoading)
+			return <ActivityIndicator />;
 
-	}
-
-	renderButtonRegister() {
 		return(
 			<Button
-				onPress={() => this.tryRegister()}
+				onPress={() => this.registrar()}
 			  title="Registrar-se"
 			  color="#ff2e63"
 			/>
 		);
 	}
 
-	renderMessage() {
+	mostrarMensagem() {
 		const { Mensagem } = this.state;
 
 		if (!Mensagem)
@@ -122,7 +118,7 @@ export default class RegisterPage extends React.Component {
 					/>
 				</FormRow>
 
-				<FormRow first>
+				<FormRow>
 					<Text>E-mail:</Text>
 					<TextInput
 						style={styles.input}
@@ -154,7 +150,9 @@ export default class RegisterPage extends React.Component {
 					/>
 				</FormRow>
 
-				{ this.renderButtonRegister() }
+				{ this.mostrarMensagem() }
+
+				{ this.mostrarBotaoRegistrar() }
 
 			</View>
 		)
