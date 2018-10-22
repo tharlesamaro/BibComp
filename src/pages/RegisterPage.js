@@ -9,11 +9,9 @@ import {
 	ActivityIndicator
 } from 'react-native';
 
-import firebase from 'firebase';
-
-import FirebaseConfig from '../components/FirebaseConfig';
-
 import FormRow from '../components/FormRow';
+
+import ApiUrl from '../components/Api';
 
 export default class RegisterPage extends React.Component {
 
@@ -21,11 +19,12 @@ export default class RegisterPage extends React.Component {
 		super(props);
 
 		this.state = {
-	  		mail: '',
-	  		password: '',
-				confirmPassword: '',
-	  		isLoading: false,
-	  		message: '',
+				Nome: '',
+	  		Email: '',
+	  		Senha: '',
+				ConfirmarSenha: '',
+	  		IsLoading: false,
+	  		Mensagem: '',
 	  	};
 	}
 
@@ -39,7 +38,39 @@ export default class RegisterPage extends React.Component {
 	}
 
 	tryRegister() {
+		this.setState({ IsLoading: true, Mensagem: '' });
 
+		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
+
+		if (Senha === ConfirmarSenha) {
+			fetch(ApiUrl + 'registrar-usuario', {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+	    		'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					nome: Nome,
+					email: Email,
+					senha: Senha
+				})
+			})
+			.then(response => response.json())
+				.then(responseJson => {
+					console.log('1: ', responseJson);
+				})
+				.catch(error => {
+					console.log('Erro: ', error);
+					this.setState({ Mensagem: this.getMessageErrorCode(error.code) })
+				})
+			.then(() => this.setState({ IsLoading: false }));
+		}
+		else {
+			this.setState({
+				IsLoading: false,
+				Mensagem: 'As senhas digitadas não são iguais'
+			});
+		}
 	}
 
 	getMessageErrorCode(errorCode) {
@@ -57,14 +88,14 @@ export default class RegisterPage extends React.Component {
 	}
 
 	renderMessage() {
-		const { message } = this.state;
+		const { Mensagem } = this.state;
 
-		if (!message)
+		if (!Mensagem)
 			return null;
 
 		return(
 			<View>
-				<Text style={styles.erro}>{ message }</Text>
+				<Text style={styles.erro}>{ Mensagem }</Text>
 			</View>
 		);
 	}
@@ -76,12 +107,22 @@ export default class RegisterPage extends React.Component {
 				<Text style={styles.title}>Cadastro</Text>
 
 				<FormRow first>
+					<Text>Nome:</Text>
+					<TextInput
+						style={styles.input}
+						placeholder="Nome Sobrenome"
+						value={this.state.Nome}
+						onChangeText={value => this.onChangeInput('Nome', value)}
+					/>
+				</FormRow>
+
+				<FormRow first>
 					<Text>E-mail:</Text>
 					<TextInput
 						style={styles.input}
 						placeholder="exemplo@mail.com"
-						value={this.state.mail}
-						onChangeText={value => this.onChangeInput('mail', value)}
+						value={this.state.Email}
+						onChangeText={value => this.onChangeInput('Email', value)}
 					/>
 				</FormRow>
 
@@ -91,8 +132,8 @@ export default class RegisterPage extends React.Component {
 						style={styles.input}
 						placeholder="********"
 						secureTextEntry
-						value={this.state.password}
-						onChangeText={value => this.onChangeInput('password', value)}
+						value={this.state.Senha}
+						onChangeText={value => this.onChangeInput('Senha', value)}
 					/>
 				</FormRow>
 
@@ -102,8 +143,8 @@ export default class RegisterPage extends React.Component {
 						style={styles.input}
 						placeholder="********"
 						secureTextEntry
-						value={this.state.confirmPassword}
-						onChangeText={value => this.onChangeInput('confirmPassword', value)}
+						value={this.state.ConfirmarSenha}
+						onChangeText={value => this.onChangeInput('ConfirmarSenha', value)}
 					/>
 				</FormRow>
 
