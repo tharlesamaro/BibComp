@@ -11,7 +11,7 @@ implementadas as funcionalidades abaixo.
 
 ## Backend
 
-[Clique aqui para ver o backend do projeto](https://github.com/tharlesamaro/BibComp-Backend)
+[Clique aqui para ver o backend do projeto](https://github.com/tharlesamaro/BibCompBackend)
 
 ## Telas
 
