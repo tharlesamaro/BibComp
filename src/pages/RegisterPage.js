@@ -26,7 +26,6 @@ export default class RegisterPage extends React.Component {
 				ConfirmarSenha: '',
 	  		IsLoading: false,
 	  		Mensagem: '',
-
 	  	};
 	}
 
@@ -43,6 +42,19 @@ export default class RegisterPage extends React.Component {
 		const { api } = ServerUrl;
 
 		console.log(Nome, Email, Senha, api + 'cadastro-novo-usuario');
+
+		let nomeVazio = Nome === '';
+		let emailVazio = Email === '';
+		let senhaVazia = Senha === ''
+		let ConfirmarSenhaVazia = ConfirmarSenha === '';
+
+		if (nomeVazio || emailVazio || senhaVazia || ConfirmarSenhaVazia) {
+			this.setState({
+				IsLoading: false,
+				Mensagem: 'Preencha todos os campos'
+			});
+			return;
+		}
 
 		if (Senha === ConfirmarSenha) {
 			fetch(api + 'cadastro-novo-usuario', {

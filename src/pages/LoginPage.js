@@ -7,14 +7,13 @@ import {
 	StyleSheet,
 	Image,
 	Button,
-	ActivityIndicator
+	ActivityIndicator,
+	Alert
 } from 'react-native';
 
-import firebase from 'firebase';
-
-import FirebaseConfig from '../components/FirebaseConfig';
-
 import FormRow from '../components/FormRow';
+
+import ServerUrl from '../service/Api';
 
 export default class LoginPage extends React.Component {
 
@@ -22,15 +21,12 @@ export default class LoginPage extends React.Component {
 		super(props);
 
 		this.state = {
-	  		mail: '',
+	  		email: '',
 	  		password: '',
 	  		isLoading: false,
 	  		message: '',
+				publicKey: 'aNVidrYfCUtRaPDS26riyElh2TuJExEwDqvjDzxX'
 	  	};
-	}
-
-	componentDidMount() {
-		firebase.initializeApp(FirebaseConfig);
 	}
 
 	onChangeInput(field, value) {
@@ -39,32 +35,33 @@ export default class LoginPage extends React.Component {
 		});
 	}
 
-	tryLogin() {
+	autenticar() {
 		this.setState({ isLoading: true, message: '' });
 
-		const { mail, password } = this.state
+		const { email, password, publicKey } = this.state;
+		const { api, web } = ServerUrl;
 
-		firebase
-			.auth()
-			.signInWithEmailAndPassword(mail, password)
-			.then(user => {
-				console.log('Usuário autenticado!', user);
+		fetch(web + 'oauth/token', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				'grant_type': 'password',
+				'client_id': '2',
+				'client_secret': publicKey,
+				'username': email,
+				'password': password
 			})
+		})
+		.then(response => response.json())
+			.then(responseJson => { Alert.alert(responseJson) })
 			.catch(error => {
-				this.setState({ message: this.getMessageErrorCode(error.code) })
+				console.log('Erro no react native: ', error);
+				this.setState({ Mensagem: "error" })
 			})
-			.then(() => this.setState({ isLoading: false }));
-	}
-
-	getMessageErrorCode(errorCode) {
-		switch(errorCode) {
-			case 'auth/wrong-password':
-				return 'Senha incorreta';
-			case 'auth/user-not-found':
-				return 'Usuário não encontrado';
-			default:
-				return 'Erro desconhecido';
-		}
+			.then(() => this.setState({ IsLoading: false }));
 	}
 
 	tryRegister() {
@@ -77,7 +74,7 @@ export default class LoginPage extends React.Component {
 
 		return(
 			<Button
-				onPress={() => this.tryLogin()}
+				onPress={() => this.autenticar()}
 			  title="Acessar"
 			  color="#252a34"
 			/>
