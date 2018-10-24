@@ -40,17 +40,19 @@ export default class RegisterPage extends React.Component {
 
 		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
 
+		console.log(Nome, Email, Senha, ApiUrl + 'cadastro-novo-usuario');
+
 		if (Senha === ConfirmarSenha) {
-			fetch(ApiUrl + 'registrar-usuario', {
+			fetch(ApiUrl + 'cadastro-novo-usuario', {
 				method: 'POST',
 				headers: {
 					'Accept': 'application/json',
 	    		'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					nome: Nome,
+					name: Nome,
 					email: Email,
-					senha: Senha
+					password: Senha
 				})
 			})
 			.then(response => response.json())
