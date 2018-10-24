@@ -12,7 +12,7 @@ import {
 
 import FormRow from '../components/FormRow';
 
-import ApiUrl from '../service/Api';
+import ServerUrl from '../service/Api';
 
 export default class RegisterPage extends React.Component {
 
@@ -26,6 +26,7 @@ export default class RegisterPage extends React.Component {
 				ConfirmarSenha: '',
 	  		IsLoading: false,
 	  		Mensagem: '',
+
 	  	};
 	}
 
@@ -39,11 +40,12 @@ export default class RegisterPage extends React.Component {
 		this.setState({ IsLoading: true, Mensagem: '' });
 
 		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
+		const { api } = ServerUrl;
 
-		console.log(Nome, Email, Senha, ApiUrl + 'cadastro-novo-usuario');
+		console.log(Nome, Email, Senha, api + 'cadastro-novo-usuario');
 
 		if (Senha === ConfirmarSenha) {
-			fetch(ApiUrl + 'cadastro-novo-usuario', {
+			fetch(api + 'cadastro-novo-usuario', {
 				method: 'POST',
 				headers: {
 					'Accept': 'application/json',
