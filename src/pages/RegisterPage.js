@@ -1,13 +1,7 @@
 import React from 'react';
 
 import {
-	View,
-	Text,
-	TextInput,
-	StyleSheet,
-	Button,
-	ActivityIndicator,
-	Alert
+	View,Text,TextInput,StyleSheet, Button, ActivityIndicator, Alert
 } from 'react-native';
 
 import FormRow from '../components/FormRow';
@@ -20,16 +14,11 @@ export default class RegisterPage extends React.Component {
 		super(props);
 
 		this.state = {
-				Nome: '',
-	  		Email: '',
-	  		Senha: '',
-				ConfirmarSenha: '',
-	  		IsLoading: false,
-	  		Mensagem: '',
-	  	};
+			Nome: '', Email: '', Senha: '', ConfirmarSenha: '', IsLoading: false, Mensagem: ''
+  	};
 	}
 
-	onChangeInput(campo, valor) {
+	alterarValorIput(campo, valor) {
 		this.setState({
 			[campo]: valor
 		});
@@ -41,7 +30,9 @@ export default class RegisterPage extends React.Component {
 		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
 		const { api } = ServerUrl;
 
-		fetch(api + 'cadastro-novo-usuario', {
+		console.log(Nome, Email, Senha, ConfirmarSenha, api + 'registrar');
+
+		fetch(api + 'registrar', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
@@ -51,24 +42,21 @@ export default class RegisterPage extends React.Component {
 				name: Nome,
 				email: Email,
 				password: Senha,
-				confirmPassword: ConfirmarSenha
+				password_confirmation: ConfirmarSenha
 			})
 		})
 		.then(response => response.json())
 			.then(responseJson => {
-				if (responseJson.status === 'sucesso') {
-					Alert.alert(responseJson.mensagem);
+				console.log(responseJson);
+				if (responseJson.access_token) {
+					Alert.alert('Usuário ' + Nome + ' cadastrado com sucesso!');
 					this.props.navigation.navigate('Login')
 				}
-				if (responseJson.status === 'erro')
-					console.log(responseJson.mensagem)
-					// this.setState({ Mensagem: responseJson.mensagem })
 			})
-			.catch(error => {
-				console.log('Erro no react native: ', error);
-				this.setState({ Mensagem: error })
-			})
-			.then(() => this.setState({ IsLoading: false }));
+		.catch(error => {
+			this.setState({ Mensagem: 'Erro: ' + error })
+		})
+		.then(() => this.setState({ IsLoading: false }));
 	}
 
 	mostrarBotaoRegistrar() {
@@ -109,7 +97,7 @@ export default class RegisterPage extends React.Component {
 						style={styles.input}
 						placeholder="Nome Sobrenome"
 						value={this.state.Nome}
-						onChangeText={value => this.onChangeInput('Nome', value)}
+						onChangeText={value => this.alterarValorIput('Nome', value)}
 					/>
 				</FormRow>
 
@@ -119,7 +107,7 @@ export default class RegisterPage extends React.Component {
 						style={styles.input}
 						placeholder="exemplo@mail.com"
 						value={this.state.Email}
-						onChangeText={value => this.onChangeInput('Email', value)}
+						onChangeText={value => this.alterarValorIput('Email', value)}
 					/>
 				</FormRow>
 
@@ -130,7 +118,7 @@ export default class RegisterPage extends React.Component {
 						placeholder="********"
 						secureTextEntry
 						value={this.state.Senha}
-						onChangeText={value => this.onChangeInput('Senha', value)}
+						onChangeText={value => this.alterarValorIput('Senha', value)}
 					/>
 				</FormRow>
 
@@ -141,7 +129,7 @@ export default class RegisterPage extends React.Component {
 						placeholder="********"
 						secureTextEntry
 						value={this.state.ConfirmarSenha}
-						onChangeText={value => this.onChangeInput('ConfirmarSenha', value)}
+						onChangeText={value => this.alterarValorIput('ConfirmarSenha', value)}
 					/>
 				</FormRow>
 
