@@ -33,8 +33,6 @@ export default class LoginPage extends React.Component {
 		const { email, password } = this.state;
 		const { api, web } = ServerUrl;
 
-		console.log(api);
-
 		fetch(api + 'login', {
 			method: 'POST',
 			headers: {
@@ -49,13 +47,12 @@ export default class LoginPage extends React.Component {
 		.then(response => response.json())
 			.then(responseJson => { console.log(responseJson) })
 		.catch(error => {
-			console.log('Erro no react native: ', error)
 			this.setState({ Mensagem: "Erro ao logar" })
 		})
 		.then(() => this.setState({ IsLoading: false }));
 	}
 
-	tryRegister() {
+	registrar() {
 		this.props.navigation.navigate('Register');
 	}
 
@@ -75,7 +72,7 @@ export default class LoginPage extends React.Component {
 	mostrarBotaoRegistrar() {
 		return(
 			<Button
-				onPress={() => this.tryRegister()}
+				onPress={() => this.registrar()}
 			  title="Registrar-se"
 			  color="#ff2e63"
 			/>
