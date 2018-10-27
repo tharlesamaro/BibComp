@@ -41,55 +41,34 @@ export default class RegisterPage extends React.Component {
 		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
 		const { api } = ServerUrl;
 
-		console.log(Nome, Email, Senha, api + 'cadastro-novo-usuario');
-
-		let nomeVazio = Nome === '';
-		let emailVazio = Email === '';
-		let senhaVazia = Senha === ''
-		let ConfirmarSenhaVazia = ConfirmarSenha === '';
-
-		if (nomeVazio || emailVazio || senhaVazia || ConfirmarSenhaVazia) {
-			this.setState({
-				IsLoading: false,
-				Mensagem: 'Preencha todos os campos'
-			});
-			return;
-		}
-
-		if (Senha === ConfirmarSenha) {
-			fetch(api + 'cadastro-novo-usuario', {
-				method: 'POST',
-				headers: {
-					'Accept': 'application/json',
-	    		'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					name: Nome,
-					email: Email,
-					password: Senha
-				})
+		fetch(api + 'cadastro-novo-usuario', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+    		'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				name: Nome,
+				email: Email,
+				password: Senha,
+				confirmPassword: ConfirmarSenha
 			})
-			.then(response => response.json())
-				.then(responseJson => {
-					if (responseJson.status === 'sucesso') {
-						Alert.alert(responseJson.mensagem);
-						this.props.navigation.navigate('Login')
-					}
-					if (responseJson.status === 'atencao' || responseJson.status === 'erro')
-						this.setState({ Mensagem: responseJson.mensagem })
-				})
-				.catch(error => {
-					console.log('Erro no react native: ', error);
-					this.setState({ Mensagem: error })
-				})
-				.then(() => this.setState({ IsLoading: false }));
-		}
-		else {
-			this.setState({
-				IsLoading: false,
-				Mensagem: 'As senhas digitadas não são iguais'
-			});
-		}
+		})
+		.then(response => response.json())
+			.then(responseJson => {
+				if (responseJson.status === 'sucesso') {
+					Alert.alert(responseJson.mensagem);
+					this.props.navigation.navigate('Login')
+				}
+				if (responseJson.status === 'erro')
+					console.log(responseJson.mensagem)
+					// this.setState({ Mensagem: responseJson.mensagem })
+			})
+			.catch(error => {
+				console.log('Erro no react native: ', error);
+				this.setState({ Mensagem: error })
+			})
+			.then(() => this.setState({ IsLoading: false }));
 	}
 
 	mostrarBotaoRegistrar() {

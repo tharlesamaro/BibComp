@@ -1,14 +1,7 @@
 import React from 'react';
 
 import {
-	View,
-	Text,
-	TextInput,
-	StyleSheet,
-	Image,
-	Button,
-	ActivityIndicator,
-	Alert
+	View, Text, TextInput, StyleSheet, Image, Button, ActivityIndicator, Alert
 } from 'react-native';
 
 import FormRow from '../components/FormRow';
@@ -24,51 +17,49 @@ export default class LoginPage extends React.Component {
 	  		email: '',
 	  		password: '',
 	  		isLoading: false,
-	  		message: '',
-				publicKey: 'aNVidrYfCUtRaPDS26riyElh2TuJExEwDqvjDzxX'
+	  		mensagem: '',
 	  	};
 	}
 
-	onChangeInput(field, value) {
+	alterarValorIput(field, value) {
 		this.setState({
 			[field]: value
 		});
 	}
 
 	autenticar() {
-		this.setState({ isLoading: true, message: '' });
+		this.setState({ isLoading: true, mensagem: '' });
 
-		const { email, password, publicKey } = this.state;
+		const { email, password } = this.state;
 		const { api, web } = ServerUrl;
 
-		fetch(web + 'oauth/token', {
+		console.log(api);
+
+		fetch(api + 'login', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				'grant_type': 'password',
-				'client_id': '2',
-				'client_secret': publicKey,
-				'username': email,
-				'password': password
+				email: email,
+				password: password
 			})
 		})
 		.then(response => response.json())
-			.then(responseJson => { Alert.alert(responseJson) })
-			.catch(error => {
-				console.log('Erro no react native: ', error);
-				this.setState({ Mensagem: "error" })
-			})
-			.then(() => this.setState({ IsLoading: false }));
+			.then(responseJson => { console.log(responseJson) })
+		.catch(error => {
+			console.log('Erro no react native: ', error)
+			this.setState({ Mensagem: "Erro ao logar" })
+		})
+		.then(() => this.setState({ IsLoading: false }));
 	}
 
 	tryRegister() {
 		this.props.navigation.navigate('Register');
 	}
 
-	renderButtonLogin() {
+	mostrarBotaoLogin() {
 		if (this.state.isLoading)
 			return <ActivityIndicator />;
 
@@ -81,7 +72,7 @@ export default class LoginPage extends React.Component {
 		);
 	}
 
-	renderButtonRegister() {
+	mostrarBotaoRegistrar() {
 		return(
 			<Button
 				onPress={() => this.tryRegister()}
@@ -91,15 +82,15 @@ export default class LoginPage extends React.Component {
 		);
 	}
 
-	renderMessage() {
-		const { message } = this.state;
+	mostrarMensagem() {
+		const { mensagem } = this.state;
 
-		if (!message)
+		if (!mensagem)
 			return null;
 
 		return(
 			<View>
-				<Text style={styles.erro}>{ message }</Text>
+				<Text style={styles.erro}>{ mensagem }</Text>
 			</View>
 		);
 	}
@@ -118,8 +109,8 @@ export default class LoginPage extends React.Component {
 					<TextInput
 						style={styles.input}
 						placeholder="exemplo@mail.com"
-						value={this.state.mail}
-						onChangeText={value => this.onChangeInput('mail', value)}
+						value={this.state.email}
+						onChangeText={value => this.alterarValorIput('email', value)}
 					/>
 				</FormRow>
 
@@ -130,17 +121,17 @@ export default class LoginPage extends React.Component {
 						placeholder="********"
 						secureTextEntry
 						value={this.state.password}
-						onChangeText={value => this.onChangeInput('password', value)}
+						onChangeText={value => this.alterarValorIput('password', value)}
 					/>
 				</FormRow>
 
-				{ this.renderMessage() }
+				{ this.mostrarMensagem() }
 
-				{ this.renderButtonLogin() }
+				{ this.mostrarBotaoLogin() }
 
 				<FormRow first></FormRow>
 
-				{ this.renderButtonRegister() }
+				{ this.mostrarBotaoRegistrar() }
 
 			</View>
 		)
