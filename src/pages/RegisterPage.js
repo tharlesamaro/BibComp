@@ -6,14 +6,13 @@ import {
 	TextInput,
 	StyleSheet,
 	Button,
-	ActivityIndicator
+	ActivityIndicator,
+	Alert
 } from 'react-native';
 
-import firebase from 'firebase';
-
-import FirebaseConfig from '../components/FirebaseConfig';
-
 import FormRow from '../components/FormRow';
+
+import ServerUrl from '../service/Api';
 
 export default class RegisterPage extends React.Component {
 
@@ -21,50 +20,79 @@ export default class RegisterPage extends React.Component {
 		super(props);
 
 		this.state = {
-	  		mail: '',
-	  		password: '',
-				confirmPassword: '',
-	  		isLoading: false,
-	  		message: '',
+				Nome: '',
+	  		Email: '',
+	  		Senha: '',
+				ConfirmarSenha: '',
+	  		IsLoading: false,
+	  		Mensagem: '',
 	  	};
 	}
 
-	componentDidMount() {
-	}
-
-	onChangeInput(field, value) {
+	onChangeInput(campo, valor) {
 		this.setState({
-			[field]: value
+			[campo]: valor
 		});
 	}
 
-	tryRegister() {
+	registrar() {
+		this.setState({ IsLoading: true, Mensagem: '' });
 
+		const { Nome, Email, Senha, ConfirmarSenha } = this.state;
+		const { api } = ServerUrl;
+
+		fetch(api + 'cadastro-novo-usuario', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+    		'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				name: Nome,
+				email: Email,
+				password: Senha,
+				confirmPassword: ConfirmarSenha
+			})
+		})
+		.then(response => response.json())
+			.then(responseJson => {
+				if (responseJson.status === 'sucesso') {
+					Alert.alert(responseJson.mensagem);
+					this.props.navigation.navigate('Login')
+				}
+				if (responseJson.status === 'erro')
+					console.log(responseJson.mensagem)
+					// this.setState({ Mensagem: responseJson.mensagem })
+			})
+			.catch(error => {
+				console.log('Erro no react native: ', error);
+				this.setState({ Mensagem: error })
+			})
+			.then(() => this.setState({ IsLoading: false }));
 	}
 
-	getMessageErrorCode(errorCode) {
+	mostrarBotaoRegistrar() {
+		if (this.state.IsLoading)
+			return <ActivityIndicator />;
 
-	}
-
-	renderButtonRegister() {
 		return(
 			<Button
-				onPress={() => this.tryRegister()}
+				onPress={() => this.registrar()}
 			  title="Registrar-se"
 			  color="#ff2e63"
 			/>
 		);
 	}
 
-	renderMessage() {
-		const { message } = this.state;
+	mostrarMensagem() {
+		const { Mensagem } = this.state;
 
-		if (!message)
+		if (!Mensagem)
 			return null;
 
 		return(
 			<View>
-				<Text style={styles.erro}>{ message }</Text>
+				<Text style={styles.erro}>{ Mensagem }</Text>
 			</View>
 		);
 	}
@@ -76,12 +104,22 @@ export default class RegisterPage extends React.Component {
 				<Text style={styles.title}>Cadastro</Text>
 
 				<FormRow first>
+					<Text>Nome:</Text>
+					<TextInput
+						style={styles.input}
+						placeholder="Nome Sobrenome"
+						value={this.state.Nome}
+						onChangeText={value => this.onChangeInput('Nome', value)}
+					/>
+				</FormRow>
+
+				<FormRow>
 					<Text>E-mail:</Text>
 					<TextInput
 						style={styles.input}
 						placeholder="exemplo@mail.com"
-						value={this.state.mail}
-						onChangeText={value => this.onChangeInput('mail', value)}
+						value={this.state.Email}
+						onChangeText={value => this.onChangeInput('Email', value)}
 					/>
 				</FormRow>
 
@@ -91,8 +129,8 @@ export default class RegisterPage extends React.Component {
 						style={styles.input}
 						placeholder="********"
 						secureTextEntry
-						value={this.state.password}
-						onChangeText={value => this.onChangeInput('password', value)}
+						value={this.state.Senha}
+						onChangeText={value => this.onChangeInput('Senha', value)}
 					/>
 				</FormRow>
 
@@ -102,12 +140,14 @@ export default class RegisterPage extends React.Component {
 						style={styles.input}
 						placeholder="********"
 						secureTextEntry
-						value={this.state.confirmPassword}
-						onChangeText={value => this.onChangeInput('confirmPassword', value)}
+						value={this.state.ConfirmarSenha}
+						onChangeText={value => this.onChangeInput('ConfirmarSenha', value)}
 					/>
 				</FormRow>
 
-				{ this.renderButtonRegister() }
+				{ this.mostrarMensagem() }
+
+				{ this.mostrarBotaoRegistrar() }
 
 			</View>
 		)

@@ -1,20 +1,12 @@
 import React from 'react';
 
 import {
-	View,
-	Text,
-	TextInput,
-	StyleSheet,
-	Image,
-	Button,
-	ActivityIndicator
+	View, Text, TextInput, StyleSheet, Image, Button, ActivityIndicator, Alert
 } from 'react-native';
 
-import firebase from 'firebase';
-
-import FirebaseConfig from '../components/FirebaseConfig';
-
 import FormRow from '../components/FormRow';
+
+import ServerUrl from '../service/Api';
 
 export default class LoginPage extends React.Component {
 
@@ -22,69 +14,65 @@ export default class LoginPage extends React.Component {
 		super(props);
 
 		this.state = {
-	  		mail: '',
+	  		email: '',
 	  		password: '',
 	  		isLoading: false,
-	  		message: '',
+	  		mensagem: '',
 	  	};
 	}
 
-	componentDidMount() {
-		firebase.initializeApp(FirebaseConfig);
-	}
-
-	onChangeInput(field, value) {
+	alterarValorIput(field, value) {
 		this.setState({
 			[field]: value
 		});
 	}
 
-	tryLogin() {
-		this.setState({ isLoading: true, message: '' });
+	autenticar() {
+		this.setState({ isLoading: true, mensagem: '' });
 
-		const { mail, password } = this.state
+		const { email, password } = this.state;
+		const { api, web } = ServerUrl;
 
-		firebase
-			.auth()
-			.signInWithEmailAndPassword(mail, password)
-			.then(user => {
-				console.log('Usuário autenticado!', user);
+		console.log(api);
+
+		fetch(api + 'login', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email: email,
+				password: password
 			})
-			.catch(error => {
-				this.setState({ message: this.getMessageErrorCode(error.code) })
-			})
-			.then(() => this.setState({ isLoading: false }));
-	}
-
-	getMessageErrorCode(errorCode) {
-		switch(errorCode) {
-			case 'auth/wrong-password':
-				return 'Senha incorreta';
-			case 'auth/user-not-found':
-				return 'Usuário não encontrado';
-			default:
-				return 'Erro desconhecido';
-		}
+		})
+		.then(response => response.json())
+			.then(responseJson => { console.log(responseJson) })
+		.catch(error => {
+			console.log('Erro no react native: ', error)
+			this.setState({ Mensagem: "Erro ao logar" })
+		})
+		.then(() => this.setState({ IsLoading: false }));
 	}
 
 	tryRegister() {
 		this.props.navigation.navigate('Register');
 	}
 
-	renderButtonLogin() {
+	mostrarBotaoLogin() {
 		if (this.state.isLoading)
 			return <ActivityIndicator />;
 
 		return(
 			<Button
-				onPress={() => this.tryLogin()}
+				onPress={() => this.autenticar()}
 			  title="Acessar"
 			  color="#252a34"
 			/>
 		);
 	}
 
-	renderButtonRegister() {
+	mostrarBotaoRegistrar() {
 		return(
 			<Button
 				onPress={() => this.tryRegister()}
@@ -94,15 +82,15 @@ export default class LoginPage extends React.Component {
 		);
 	}
 
-	renderMessage() {
-		const { message } = this.state;
+	mostrarMensagem() {
+		const { mensagem } = this.state;
 
-		if (!message)
+		if (!mensagem)
 			return null;
 
 		return(
 			<View>
-				<Text style={styles.erro}>{ message }</Text>
+				<Text style={styles.erro}>{ mensagem }</Text>
 			</View>
 		);
 	}
@@ -121,8 +109,8 @@ export default class LoginPage extends React.Component {
 					<TextInput
 						style={styles.input}
 						placeholder="exemplo@mail.com"
-						value={this.state.mail}
-						onChangeText={value => this.onChangeInput('mail', value)}
+						value={this.state.email}
+						onChangeText={value => this.alterarValorIput('email', value)}
 					/>
 				</FormRow>
 
@@ -133,17 +121,17 @@ export default class LoginPage extends React.Component {
 						placeholder="********"
 						secureTextEntry
 						value={this.state.password}
-						onChangeText={value => this.onChangeInput('password', value)}
+						onChangeText={value => this.alterarValorIput('password', value)}
 					/>
 				</FormRow>
 
-				{ this.renderMessage() }
+				{ this.mostrarMensagem() }
 
-				{ this.renderButtonLogin() }
+				{ this.mostrarBotaoLogin() }
 
 				<FormRow first></FormRow>
 
-				{ this.renderButtonRegister() }
+				{ this.mostrarBotaoRegistrar() }
 
 			</View>
 		)
