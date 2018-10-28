@@ -14,11 +14,8 @@ export default class LoginPage extends React.Component {
 		super(props);
 
 		this.state = {
-	  		email: '',
-	  		password: '',
-	  		isLoading: false,
-	  		mensagem: '',
-	  	};
+  		email: '', password: '', loading: false, mensagem: ''
+		};
 	}
 
 	alterarValorIput(field, value) {
@@ -28,10 +25,10 @@ export default class LoginPage extends React.Component {
 	}
 
 	autenticar() {
-		this.setState({ isLoading: true, mensagem: '' });
+		this.setState({ loading: true, mensagem: '' });
 
-		const { email, password } = this.state;
-		const { api, web } = ServerUrl;
+		const { email, password, mensagem } = this.state;
+		const { api } = ServerUrl;
 
 		fetch(api + 'login', {
 			method: 'POST',
@@ -45,11 +42,20 @@ export default class LoginPage extends React.Component {
 			})
 		})
 		.then(response => response.json())
-			.then(responseJson => { console.log(responseJson) })
+			.then(responseJson => {
+
+				this.setState({ loading: false })
+
+				if (responseJson.access_token)
+					this.props.navigation.navigate('Index');
+
+				if (responseJson.error || responseJson.erros)
+					this.setState({ mensagem: responseJson.message });
+			})
 		.catch(error => {
-			this.setState({ Mensagem: "Erro ao logar" })
+			this.setState({ mensagem: "Erro ao logar" })
 		})
-		.then(() => this.setState({ IsLoading: false }));
+		.then(() => this.setState({ loading: false }));
 	}
 
 	registrar() {
@@ -57,7 +63,7 @@ export default class LoginPage extends React.Component {
 	}
 
 	mostrarBotaoLogin() {
-		if (this.state.isLoading)
+		if (this.state.loading)
 			return <ActivityIndicator />;
 
 		return(

@@ -4,19 +4,27 @@ import LoginPage from './src/pages/LoginPage';
 
 import RegisterPage from './src/pages/RegisterPage'
 
+import IndexPage from './src/pages/IndexPage'
+
 export default createStackNavigator(
 	{
 		'Login': {
 			screen: LoginPage,
 			navigationOptions: {
-		    	title: "BibComp - Login"
-		  	}
+	    	title: "BibComp - Login"
+	  	}
 		},
 		'Register': {
 			screen: RegisterPage,
 			navigationOptions: {
-		    	title: "BibComp - Cadastro"
-		  	}
+	    	title: "BibComp - Cadastro"
+	  	}
+		},
+		'Index': {
+			screen: IndexPage,
+			navigationOptions: {
+	    	title: "BibComp - Index"
+	  	}
 		}
 	},
 	{
