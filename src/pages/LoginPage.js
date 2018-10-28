@@ -1,4 +1,4 @@
-import { React } from "react";
+import React from "react";
 
 import {
 	View, Text, TextInput, StyleSheet, Image, Button, ActivityIndicator, Alert, AsyncStorage
@@ -46,16 +46,17 @@ export default class LoginPage extends React.Component {
 
 				this.setState({ loading: false });
 
-				if (responseJson.access_token)
+				if (responseJson.access_token) {
 
-					this.setState({ access_token: responseJson.access_token });
+					// this.setState({ access_token: responseJson.access_token })
 
-					await AsyncStorage.setItem('access_token', access_token);
+					console.log(responseJson);
 
-					this.props.navigation.navigate('Index');
+					//this.props.navigation.navigate('Index')
+				}
 
 				if (responseJson.error || responseJson.erros)
-					this.setState({ mensagem: responseJson.message });
+					this.setState({ mensagem: responseJson.message })
 			})
 		.catch(error => {
 			this.setState({ mensagem: "Erro ao logar" });
