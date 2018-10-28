@@ -1,12 +1,12 @@
-import React from 'react';
+import { React } from "react";
 
 import {
-	View, Text, TextInput, StyleSheet, Image, Button, ActivityIndicator, Alert
-} from 'react-native';
+	View, Text, TextInput, StyleSheet, Image, Button, ActivityIndicator, Alert, AsyncStorage
+} from "react-native";
 
-import FormRow from '../components/FormRow';
+import FormRow from "../components/FormRow";
 
-import ServerUrl from '../service/Api';
+import ServerUrl from "../service/Api";
 
 export default class LoginPage extends React.Component {
 
@@ -14,7 +14,7 @@ export default class LoginPage extends React.Component {
 		super(props);
 
 		this.state = {
-  		email: '', password: '', loading: false, mensagem: ''
+  		email: '', password: '', loading: false, mensagem: '', access_token: ''
 		};
 	}
 
@@ -27,7 +27,7 @@ export default class LoginPage extends React.Component {
 	autenticar() {
 		this.setState({ loading: true, mensagem: '' });
 
-		const { email, password, mensagem } = this.state;
+		const { email, password, mensagem, access_token } = this.state;
 		const { api } = ServerUrl;
 
 		fetch(api + 'login', {
@@ -44,16 +44,21 @@ export default class LoginPage extends React.Component {
 		.then(response => response.json())
 			.then(responseJson => {
 
-				this.setState({ loading: false })
+				this.setState({ loading: false });
 
 				if (responseJson.access_token)
+
+					this.setState({ access_token: responseJson.access_token });
+
+					await AsyncStorage.setItem('access_token', access_token);
+
 					this.props.navigation.navigate('Index');
 
 				if (responseJson.error || responseJson.erros)
 					this.setState({ mensagem: responseJson.message });
 			})
 		.catch(error => {
-			this.setState({ mensagem: "Erro ao logar" })
+			this.setState({ mensagem: "Erro ao logar" });
 		})
 		.then(() => this.setState({ loading: false }));
 	}
