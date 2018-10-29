@@ -1,6 +1,6 @@
 const ServerUrl = {
-  api: 'http://10.0.0.14/api/',
-  web: 'http://10.0.0.14/',
+  api: 'http://192.168.15.223/api/',
+  web: 'http://192.168.15.223/',
 };
 
 export default ServerUrl;

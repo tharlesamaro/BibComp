@@ -8,6 +8,8 @@ import FormRow from "../components/FormRow";
 
 import ServerUrl from "../service/Api";
 
+import store from 'react-native-simple-store';
+
 export default class LoginPage extends React.Component {
 
 	constructor(props) {
@@ -30,9 +32,9 @@ export default class LoginPage extends React.Component {
 		const { email, password, mensagem, access_token } = this.state;
 		const { api } = ServerUrl;
 
-		fetch(api + 'login', {
+		const requestInfo = {
 			method: 'POST',
-			headers: {
+      headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
@@ -40,28 +42,28 @@ export default class LoginPage extends React.Component {
 				email: email,
 				password: password
 			})
-		})
-		.then(response => response.json())
-			.then(responseJson => {
+    }
 
-				this.setState({ loading: false });
+		fetch(api + 'login', requestInfo)
+			.then(response => {
 
-				if (responseJson.access_token) {
+				console.warn('1:', response);
 
-					// this.setState({ access_token: responseJson.access_token })
+				if (response.ok)
+					return response.json()
 
-					console.log(responseJson);
-
-					//this.props.navigation.navigate('Index')
-				}
-
-				if (responseJson.error || responseJson.erros)
-					this.setState({ mensagem: responseJson.message })
+				throw new Error("Não foi possível efetuar login")
 			})
-		.catch(error => {
-			this.setState({ mensagem: "Erro ao logar" });
-		})
-		.then(() => this.setState({ loading: false }));
+      .then(async (responseJson) => {
+
+				console.warn('2:', responseJson);
+
+				await AsyncStorage.setItem('OLOCO', responseJson.access_token); //responseJson.access_token
+
+				console.warn('3:', await AsyncStorage.getItem('OLOCO'));
+			})
+			.catch(e => this.setState({ mensagem: e.message }))
+			.then(() => this.setState({ loading: false }));
 	}
 
 	registrar() {

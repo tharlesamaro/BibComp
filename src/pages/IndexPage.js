@@ -15,46 +15,44 @@ export default class IndexPage extends React.Component {
 
 		this.state = {
   		mensagem: '',
-			access_token: AsyncStorage.getItem('access_token')
 		};
 	}
 
-	recuperarDados() {
-		const { mensagem, access_token } = this.state;
-		const { api } = ServerUrl;
+	componentDidMout() {
 
-		console.log(access_token);
-
-		fetch(api + 'index', {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token,
-			},
-			body: JSON.stringify({})
-		})
-		.then(response => response.json())
-		.then(responseJson => {
-			if (responseJson.dados.name) {
-				Alert.alert('Bem vindo ' + responseJson.dados.name);
-				console.log(responseJson.dados);
-			} else {
-				Alert.alert(responseJson.message);
-				this.props.navigation.navigate('Login')
-			}
-		})
-		.catch(error => {
-			Alert.alert("Erro: " + error);
-			this.props.navigation.navigate('Login')
-		})
+		// const { mensagem, access_token } = this.state;
+		// const { api } = ServerUrl;
+		//
+		// fetch(api + 'index', {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Accept': 'application/json',
+		// 		'Content-Type': 'application/json',
+		// 		'Authorization': 'Bearer ' + access_token,
+		// 	},
+		// 	body: JSON.stringify({})
+		// })
+		// .then(response => response.json())
+		// .then(responseJson => {
+		// 	if (responseJson.dados.name) {
+		// 		Alert.alert('Bem vindo ' + responseJson.dados.name);
+		// 		console.log(responseJson.dados);
+		// 	} else {
+		// 		Alert.alert(responseJson.message);
+		// 		this.props.navigation.navigate('Login')
+		// 	}
+		// })
+		// .catch(error => {
+		// 	Alert.alert("Erro: " + error);
+		// 	this.props.navigation.navigate('Login')
+		// })
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
 
-				{ this.recuperarDados() }
+				//{ this.recuperarDados() }
 
 				<Text>Página inicial</Text>
 
